@@ -10,8 +10,10 @@ using namespace std;
 //	trọ, ngày tháng năm sinh người thuê trọ, chỉ số điện, chỉ số nước, đơn giá phòng trọ			
 //	2. Tạo Queue chứa thông tin Nhà trọ bằng 2 cách : nhập từ bàn phím và đọc / ghi từ file txt.	Thanh	Done
 //	3. Hiển thị tất cả các thông tin của nhà trọ trong Queue.										Thanh	Done
-//	4. Xóa 1 phòng trọ trong Queue.																	Nhi
-//	5. Thêm 1 phòng trọ vào Queue.																	Nhi
+//	4. Xóa 1 phòng trọ trong Queue.																	Thanh	Done
+//	5. Thêm 1 phòng trọ vào Queue.																	Thanh	Done
+//										Anh chị test lại giúp em nha, xem còn sai sót gì ko <3
+// ==================================================================================================================================
 //	6. Tìm phòng trọ có chỉ số điện cao nhất.														Nhi
 //	7. Tìm phòng trọ của người thuê trọ có họ tên “ Tran Van A”.									Thiên
 //	8. Đếm số phòng trọ có đơn giá phòng trọ cao nhất.												Thiên
@@ -33,19 +35,20 @@ struct PhongTro
 	double water, electric, price;	// Chỉ số điện, nước, đơn giá phòng
 };
 
-void init(int& bottom, int& top);
 void inputList(PhongTro list[], int n);
 void outputList(PhongTro list[], int n);
 bool inputFile(PhongTro list[], int& n);
 void outputFile(PhongTro list[], int n);
-bool push();
-bool pop();
+void input1Phong(PhongTro& room);
+bool push(PhongTro list[], int& bottom, int& top, PhongTro x, int& n);
+bool pop(PhongTro list[], int& front, int& rear, int& n);
 
 void main()
 {
 	PhongTro a[MAX];
-	int top, bottom, key, n;	// Key là user chọn
+	int rear, front, key, n = 0;	// Key là user chọn
 	bool inp = false; // Kiểm tra nhập dữ liệu chưa
+	rear = front = -1;	// Khởi tạo Queue rỗng
 
 	do
 	{
@@ -77,7 +80,6 @@ void main()
 				if (n <= 0 || n > 100)
 					cout << "Nhap sai! Nhap lai (0 < n <= 100): ";
 			} while (n <= 0 || n > 100);
-			init(top, bottom);
 			inputList(a, n);
 
 			inp = true;
@@ -104,18 +106,71 @@ void main()
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
+		case 5:
+			{
+				PhongTro x;
+				input1Phong(x);
+				if (push(a, front, rear, x, n))
+					cout << "Them thanh cong! \n";
+				else
+					cout << "Them that bai! \n";
+				inp = true;
+			}		
+			break;
+		case 6:
+			if (inp)
+			{
+				if (pop(a, front, rear, n))
+					cout << "Xoa thanh cong! \n";
+				else
+					cout << "Xoa that bai! \n";
+			}
+			else
+				cout << "Chua nhap du lieu! \n";
+			break;
+//===============================================================
+		case 7:
+			if (inp)
+				outputFile(a, n);
+			else
+				cout << "Chua nhap du lieu! \n";
+			break;
+		case 8:
+			if (inp)
+				outputFile(a, n);
+			else
+				cout << "Chua nhap du lieu! \n";
+			break;
+		case 9:
+			if (inp)
+				outputFile(a, n);
+			else
+				cout << "Chua nhap du lieu! \n";
+			break;
+		case 10:
+			if (inp)
+				outputFile(a, n);
+			else
+				cout << "Chua nhap du lieu! \n";
+			break;
+		case 11:
+			if (inp)
+				outputFile(a, n);
+			else
+				cout << "Chua nhap du lieu! \n";
+			break;
+		case 12:
+			if (inp)
+				outputFile(a, n);
+			else
+				cout << "Chua nhap du lieu! \n";
+			break;
 		default: exit(0);
 		}
 		cout << endl;
 		cout << "Nhan phim bat ky de quay ve menu! \n";
 		_getch();
 	} while (key > 0 && key < 13);
-}
-
-// Khởi tạo Queue
-void init(int& bottom, int& top)
-{
-	top = bottom = -1;	// Đỉnh và đáy của Queue
 }
 
 // Xóa cách 2 đầu
@@ -168,12 +223,12 @@ void capitalize(string& s)
 // Kiểm tra ngày sinh hợp lệ
 bool checkBirth(PhongTro room)
 {
-	if (room.DOB.month >= 1 && room.DOB.month <= 12 && room.DOB.year >= 1900 && room.DOB.day >= 1)
+	if (room.DOB.month >= 1 && room.DOB.month <= 12 && room.DOB.year >= 1900 && room.DOB.day >= 1)	// Giới hạn ngày sinh hợp lệ
 	{
 		switch (room.DOB.month)
 		{
 		case 2:
-			if (room.DOB.year % 400 == 0 || room.DOB.year % 4 == 0 && room.DOB.year % 100 != 0)
+			if (room.DOB.year % 400 == 0 || room.DOB.year % 4 == 0 && room.DOB.year % 100 != 0)	// Kiểm tra năm nhuận
 				if (room.DOB.day <= 29) return 1;
 			break;
 		case 4: case 6: case 9: case 11:
@@ -225,7 +280,6 @@ void input1Phong(PhongTro& room)
 			cout << "Chi so dien khong hop le! Nhap lai: ";
 	} while (room.electric < 0);
 
-
 	cout << "+ Nhap chi so nuoc: ";
 	do
 	{
@@ -276,6 +330,8 @@ void output1Phong(PhongTro room)
 // Xuất nhiều phòng
 void outputList(PhongTro list[], int n)
 {
+	cout << "So luong phong tro hien co: " << n << " phong ! \n";
+	cout << "========================================================== \n";
 	for (int i = 0; i < n; i++)
 	{
 		cout << "Thong tin phong tro thu " << i + 1 << endl;
@@ -393,12 +449,49 @@ void outputFile(PhongTro list[], int n)
 	fo.close();
 }
 
-bool push()
+// Push phần tử bằng phương pháp vòng
+bool push(PhongTro list[], int& front, int& rear, PhongTro x, int& n)
 {
+	if (n != 0)		// Nếu đã input sẽ cập nhật lại front và rear
+	{
+		rear = n - 1;
+		front = 0;
+	}
+		
+	if (rear - front <= MAX - 1 && rear - front != -1) // Khi Queue chưa đầy
+	{
+		if (front == -1)	// Xét Queue rỗng
+			front = 0;
+		if (rear == MAX - 1)	// Xét Queue tràn
+			rear = -1;
+		list[++rear] = x;
+		n++;
+		return 1;
+	}
 	return 0;
 }
 
-bool pop()
+// Pop phần tử bằng phương pháp vòng
+bool pop(PhongTro list[], int& front, int& rear, int& n)
 {
+	if (n != 0)		// Nếu đã input sẽ cập nhật lại front và rear
+	{
+		rear = n - 1;
+		front = 0;
+	}
+
+	if (front != -1)
+	{
+		if (front == rear) 
+			front = rear = -1;
+		else
+		{
+			front++;
+			if (front > MAX - 1)
+				front = 0;
+		}
+		n--;
+		return 1;
+	}
 	return 0;
 }
