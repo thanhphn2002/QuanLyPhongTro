@@ -1,20 +1,20 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include <conio.h>
 #include <string>
 using namespace std;
 #define MAX 100 // Có tối đa 100 phòng
 //	Đề tài số 9: Quản lý phòng trọ
-//	1. Mỗi nhà trọ các thông tin : mã phòng trọ, họ tên người thuê trọ, số CMND người thuê			Thanh	Done
+//	1. Mỗi nhà trọ các thông tin : mã phòng trọ, họ tên người thuê trọ, số CMND người thuê			Done
 //	trọ, ngày tháng năm sinh người thuê trọ, chỉ số điện, chỉ số nước, đơn giá phòng trọ			
-//	2. Tạo Queue chứa thông tin Nhà trọ bằng 2 cách : nhập từ bàn phím và đọc / ghi từ file txt.	Thanh	Done
-//	3. Hiển thị tất cả các thông tin của nhà trọ trong Queue.										Thanh	Done
-//	4. Xóa 1 phòng trọ trong Queue.																	Thanh	Done
-//	5. Thêm 1 phòng trọ vào Queue.																	Thanh	Done
+//	2. Tạo Queue chứa thông tin Nhà trọ bằng 2 cách : nhập từ bàn phím và đọc / ghi từ file txt.	Done
+//	3. Hiển thị tất cả các thông tin của nhà trọ trong Queue.										Done
+//	4. Xóa 1 phòng trọ trong Queue.																	Done
+//	5. Thêm 1 phòng trọ vào Queue.																	Done
 //										Anh chị test lại giúp em nha, xem còn sai sót gì ko <3
 // ==================================================================================================================================
-//	6. Tìm phòng trọ có chỉ số điện cao nhất.														Nhi
-//	7. Tìm phòng trọ của người thuê trọ có họ tên “ Tran Van A”.									Thiên
+//	6. Tìm phòng trọ có chỉ số điện cao nhất.														Done
+//	7. Tìm phòng trọ của người thuê trọ có họ tên “ Tran Van A”.									Done
 //	8. Đếm số phòng trọ có đơn giá phòng trọ cao nhất.												Thiên
 //	9. Đếm số phòng trọ có người thuê trọ có năm sinh < 2002.										Thiên
 //	10. Tính tổng chỉ số điện của tất cả các phòng trọ trong nhà trọ.								My
@@ -34,16 +34,21 @@ struct PhongTro
 	double water, electric, price;	// Chỉ số điện, nước, đơn giá phòng
 };
 
+void init(int& front, int& rear, int n);
 void inputList(PhongTro list[], int n);
-void outputList(PhongTro list[], int n);
+void outputList(PhongTro list[], int n, int front);
 bool inputFile(PhongTro list[], int& n);
-void outputFile(PhongTro list[], int n);
+void outputFile(PhongTro list[], int front, int rear, int n);
 void input1Phong(PhongTro& room);
 bool push(PhongTro list[], int& bottom, int& top, PhongTro x, int& n);
 bool pop(PhongTro list[], int& front, int& rear, int& n);
-void ouputPhongCoDonGiaCaoNhat(PhongTro list[], int &n);
-void findRoomByName(PhongTro list[],int &n,string name);
-string toLowerCase(string &s1);
+void ouputPhongDienCaoNhat(PhongTro list[], int front, int rear);
+void findRoomByName(PhongTro list[], int front, int rear, string name);
+bool checkBirth(PhongTro room);
+void capitalize(string& s);
+void deleteSpace(string& s);
+void trim(string& s);
+
 int main()
 {
 	PhongTro a[MAX];
@@ -82,6 +87,7 @@ int main()
 					cout << "Nhap sai! Nhap lai (0 < n <= 100): ";
 			} while (n <= 0 || n > 100);
 			inputList(a, n);
+			init(front, rear, n);
 
 			inp = true;
 			cout << "Nhap du lieu thanh cong! \n";
@@ -90,6 +96,7 @@ int main()
 			if (inputFile(a, n))
 			{
 				cout << "Nhap File thanh cong! \n";
+				init(front, rear, n);
 				inp = true;
 			}
 			else
@@ -97,27 +104,30 @@ int main()
 			break;
 		case 3:
 			if (inp)
-				outputList(a, n);
+			{
+				cout << "So luong phong tro hien co: " << n << " phong ! \n";
+				outputList(a, front, rear);
+			}
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
 		case 4:
 			if (inp)
-				outputFile(a, n);
+				outputFile(a, front, rear, n);
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
 		case 5:
-			{
-				PhongTro x;
-				input1Phong(x);
-				if (push(a, front, rear, x, n))
-					cout << "Them thanh cong! \n";
-				else
-					cout << "Them that bai! \n";
-				inp = true;
-			}		
-			break;
+		{
+			PhongTro x;
+			input1Phong(x);
+			if (push(a, front, rear, x, n))
+				cout << "Them thanh cong! \n";
+			else
+				cout << "Them that bai! \n";
+			inp = true;
+		}
+		break;
 		case 6:
 			if (inp)
 			{
@@ -129,46 +139,56 @@ int main()
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
-//===============================================================
+			//===============================================================
 		case 7:
 			if (inp)
-				ouputPhongCoDonGiaCaoNhat(a,n);
+			{
+				cout << " Phong co chi so dien cao nhat \n";
+				ouputPhongDienCaoNhat(a, front, rear);
+			}
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
 		case 8:
 			if (inp)
+			{
+				string ten;
+				cin.ignore();
+				cout << "Nhap ten can tim: ";
+				do
 				{
-					string ten;
-					cin.ignore();
-				cout<<"Nhap ten can tim: ";
-				getline(cin, ten);
-				findRoomByName(a,n,ten);
-				}
+					getline(cin, ten);
+					trim(ten);
+					if (ten.size() == 0)
+						cout << "Khong hop le! Nhap lai: ";
+				} while (ten.size() == 0);
+				capitalize(ten);
+				findRoomByName(a, front, rear, ten);
+			}
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
 		case 9:
 			if (inp)
-				outputFile(a, n);
+				cout << "Nhap File thanh cong! \n";
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
 		case 10:
 			if (inp)
-				outputFile(a, n);
+				cout << "Nhap File thanh cong! \n";
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
 		case 11:
 			if (inp)
-				outputFile(a, n);
+				cout << "Nhap File thanh cong! \n";
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
 		case 12:
 			if (inp)
-				outputFile(a, n);
+				cout << "Nhap File thanh cong! \n";
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
@@ -182,18 +202,18 @@ int main()
 	return 0;
 }
 
+void init(int& front, int& rear, int n)
+{
+	rear = n - 1;
+	front = 0;
+}
+
 // Xóa cách 2 đầu
 void trim(string& s)
 {
-	int left = 0, right = s.size() - 1; // Đầu chuỗi và cuối chuỗi
-	while (s[left] == ' ' || (s[right] == ' '))
-	{
-		if (s[left] == ' ') left++;
-		if (s[right] == ' ') right--;
-	}
-
-	s.erase(right + 1, s.size() - 1);
-	s.erase(0, left);
+	const char* space = " ";
+	s.erase(s.find_last_not_of(space) + 1);
+	s.erase(0, s.find_first_not_of(space));
 }
 
 // Xóa cách ở giữa
@@ -238,17 +258,20 @@ bool checkBirth(PhongTro room)
 		{
 		case 2:
 			if (room.DOB.year % 400 == 0 || room.DOB.year % 4 == 0 && room.DOB.year % 100 != 0)	// Kiểm tra năm nhuận
-				if (room.DOB.day <= 29) return 1;
+			{
+				if (room.DOB.day <= 29) return true;
+			}
+			else if (room.DOB.day < 29) return true;
 			break;
 		case 4: case 6: case 9: case 11:
-			if (room.DOB.day <= 30) return 1;
+			if (room.DOB.day <= 30) return true;
 			break;
 		default:
-			if (room.DOB.day <= 31) return 1;
+			if (room.DOB.day <= 31) return true;
 			break;
 		}
 	}
-	return 0;
+	return false;
 }
 
 // Nhập 1 phòng
@@ -256,20 +279,35 @@ void input1Phong(PhongTro& room)
 {
 	cin.ignore();
 	cout << "+ Nhap ma phong tro: ";
-	getline(cin, room.idRoom);
-	trim(room.idRoom);
+	do
+	{
+		getline(cin, room.idRoom);
+		trim(room.idRoom);
+		if (room.idRoom.size() == 0)
+			cout << "Khong hop le! Nhap lai: ";
+	} while (room.idRoom.size() == 0);
 	deleteSpace(room.idRoom);
 	room.idRoom.substr(0, 5);	// Mã phòng tối đa 5 ký tự
 
 	cout << "+ Nhap ho ten nguoi thue tro: ";
-	getline(cin, room.name);
-	trim(room.name);
+	do
+	{
+		getline(cin, room.name);
+		trim(room.name);
+		if (room.name.size() == 0)
+			cout << "Khong hop le! Nhap lai: ";
+	} while (room.name.size() == 0);
 	capitalize(room.name);		// Format Họ tên
 	room.name.substr(0, 50);	// Họ tên tối đa 50 ký tự
 
 	cout << "+ Nhap so CMND: ";
-	getline(cin, room.idCard);
-	trim(room.idCard);
+	do
+	{
+		getline(cin, room.idCard);
+		trim(room.idCard);
+		if (room.idCard.size() == 0)
+			cout << "Khong hop le! Nhap lai: ";
+	} while (room.idCard.size() == 0);
 	deleteSpace(room.idCard);
 	room.idCard.substr(0, 12);	// Số CMND tối đa 12 ký tự
 
@@ -337,16 +375,16 @@ void output1Phong(PhongTro room)
 }
 
 // Xuất nhiều phòng
-void outputList(PhongTro list[], int n)
+void outputList(PhongTro list[], int front, int rear)
 {
-	cout << "So luong phong tro hien co: " << n << " phong ! \n";
 	cout << "========================================================== \n";
-	for (int i = 0; i < n; i++)
-	{
-		cout << "Thong tin phong tro thu " << i + 1 << endl;
-		output1Phong(list[i]);
-		cout << "========================================================== \n";
-	}
+	if (rear != -1)
+		for (int i = front; i <= rear; i++)
+		{
+			cout << "Thong tin phong tro thu " << i + 1 << endl;
+			output1Phong(list[i]);
+			cout << "========================================================== \n";
+		}
 }
 
 // Đọc File
@@ -375,6 +413,7 @@ bool inputFile(PhongTro list[], int& n)
 				{
 					trim(temp);
 					list[i].idRoom = temp.erase(0, 1);
+					if (list[i].idRoom.size() == 0) return false;
 					deleteSpace(list[i].idRoom);
 					list[i].idRoom.substr(0, 5);
 				}
@@ -384,6 +423,7 @@ bool inputFile(PhongTro list[], int& n)
 				{
 					list[i].name = temp;
 					trim(list[i].name);
+					if (list[i].name.size() == 0) return false;
 					capitalize(list[i].name);		// Format Họ tên
 					list[i].name.substr(0, 50);	// Họ tên tối đa 50 ký tự
 				}
@@ -392,6 +432,7 @@ bool inputFile(PhongTro list[], int& n)
 				{
 					list[i].idCard = temp;
 					trim(list[i].idCard);
+					if (list[i].idCard.size() == 0) return false;
 					deleteSpace(list[i].idCard);
 					list[i].idCard.substr(0, 5);
 				}
@@ -403,26 +444,26 @@ bool inputFile(PhongTro list[], int& n)
 					list[i].DOB.month = stoi(temp.substr(space + 1, temp.size() - 4 - space));
 					list[i].DOB.year = stoi(temp.substr(temp.size() - 4, 4));
 
-					if (!checkBirth(list[i])) return 0;
+					if (!checkBirth(list[i])) return false;
 				}
 				break;
 				case 4:
 				{
 					list[i].electric = stod(temp);
-					if (list[i].electric < 0) return 0;
+					if (list[i].electric < 0) return false;
 				}
 				break;
 				case 5:
 				{
 					list[i].water = stod(temp);
-					if (list[i].water < 0) return 0;
+					if (list[i].water < 0) return false;
 				}
 
 				break;
 				case 6:
 				{
 					list[i].price = stod(temp);
-					if (list[i].price < 0) return 0;
+					if (list[i].price < 0) return false;
 				}
 				break;
 				}
@@ -431,29 +472,30 @@ bool inputFile(PhongTro list[], int& n)
 			}
 		}
 
-		return 1;
+		return true;
 		fi.close();
 	}
 	else
-		return 0;
+		return false;
 }
 
 // Ghi File
-void outputFile(PhongTro list[], int n)
+void outputFile(PhongTro list[], int front, int rear, int n)
 {
 	ofstream fo("database.txt");	// fo = File output
 
 	fo << n << endl;
-	for (int i = 0; i < n; i++)
-	{
-		fo << list[i].idRoom << ", "
-			<< list[i].name << ", "
-			<< list[i].idCard << ", "
-			<< list[i].DOB.day << "/" << list[i].DOB.month << "/" << list[i].DOB.year << ", "
-			<< list[i].electric << ", "
-			<< list[i].water << ", "
-			<< list[i].price << ", " << endl;
-	}
+	if (rear != -1)
+		for (int i = front; i < rear; i++)
+		{
+			fo << list[i].idRoom << ", "
+				<< list[i].name << ", "
+				<< list[i].idCard << ", "
+				<< list[i].DOB.day << "/" << list[i].DOB.month << "/" << list[i].DOB.year << ", "
+				<< list[i].electric << ", "
+				<< list[i].water << ", "
+				<< list[i].price << ", " << endl;
+		}
 	cout << "Ghi File thanh cong! \n";
 	fo.close();
 }
@@ -461,12 +503,6 @@ void outputFile(PhongTro list[], int n)
 // Push phần tử bằng phương pháp vòng
 bool push(PhongTro list[], int& front, int& rear, PhongTro x, int& n)
 {
-	if (n != 0)		// Nếu đã input sẽ cập nhật lại front và rear
-	{
-		rear = n - 1;
-		front = 0;
-	}
-		
 	if (rear - front <= MAX - 1 && rear - front != -1) // Khi Queue chưa đầy
 	{
 		if (front == -1)	// Xét Queue rỗng
@@ -483,15 +519,9 @@ bool push(PhongTro list[], int& front, int& rear, PhongTro x, int& n)
 // Pop phần tử bằng phương pháp vòng
 bool pop(PhongTro list[], int& front, int& rear, int& n)
 {
-	if (n != 0)		// Nếu đã input sẽ cập nhật lại front và rear
-	{
-		rear = n - 1;
-		front = 0;
-	}
-
 	if (front != -1)
 	{
-		if (front == rear) 
+		if (front == rear)
 			front = rear = -1;
 		else
 		{
@@ -504,54 +534,48 @@ bool pop(PhongTro list[], int& front, int& rear, int& n)
 	}
 	return 0;
 }
-void ouputPhongCoDonGiaCaoNhat(PhongTro list[], int &n)
+
+void ouputPhongDienCaoNhat(PhongTro list[], int front, int rear)
 {
 	PhongTro room[MAX];
-	int front=-1,rear=-1,m=0;
-	double maxElectric=0;
-	int kt=0;
-	for(int i=0; i<n ; i++) 
+	int dau = -1, cuoi = -1, m = 0;
+	double maxelectric = -1;
+	bool kt = false;
+
+	for (int i = front; i <= rear; i++)
 	{
-          if(maxElectric<list[i].electric)
-		   {
-			   maxElectric=list[i].electric;
-			   kt=1;
-		   }		
-	}
-	if(kt==1)
-	for(int i=0; i<n ; i++) 
-	{
-          if(maxElectric==list[i].electric)
-		 push(room,front,rear,list[i],m);
-	}
-	outputList(room,m);
-}
-void findRoomByName(PhongTro list[],int &n,string name)
-{
-	PhongTro room[MAX];
-	int kt=0;
-	int front=-1,rear=-1,m=0;
-	for(int i=0; i<n; i++)
-	{
-		if(toLowerCase(name).compare(toLowerCase(list[i].name))==0)
+		if (maxelectric < list[i].electric)
 		{
-			push(room,front,rear,list[i],m);
-			kt=1;
+			maxelectric = list[i].electric;
+			kt = true;
 		}
 	}
-	if(kt==1) 
-	outputList(room,m);
-	else
-	cout<<"Khong tim thay \n";
+
+	if (kt == true)
+		for (int i = front; i <= rear; i++)
+		{
+			if (maxelectric == list[i].electric)
+				push(room, dau, cuoi, list[i], m);
+		}
+	outputList(room, dau, cuoi);
 }
-string toLowerCase(string &s1)
+
+void findRoomByName(PhongTro list[], int front, int rear, string name)
 {
-	string m=s1;
-	int i=0;
-	while(i<m.size())
+	PhongTro room[MAX];
+	bool kt = false;
+	int dau = -1, cuoi = -1, m = 0;
+
+	for (int i = front; i <= rear; i++)
 	{
-		m[i]=tolower(m[i]);
-		i++;
+		if (name.compare(list[i].name) == 0)
+		{
+			push(room, dau, cuoi, list[i], m);
+			kt = true;
+		}
 	}
-	return m;
+	if (kt == true)
+		outputList(room, dau, cuoi);
+	else
+		cout << "khong tim thay \n";
 }
