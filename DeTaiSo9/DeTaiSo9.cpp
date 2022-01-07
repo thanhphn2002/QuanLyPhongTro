@@ -1,10 +1,9 @@
-﻿#include <iostream>
+#include <iostream>
 #include <fstream>
 #include <conio.h>
 #include <string>
 using namespace std;
 #define MAX 100 // Có tối đa 100 phòng
-
 //	Đề tài số 9: Quản lý phòng trọ
 //	1. Mỗi nhà trọ các thông tin : mã phòng trọ, họ tên người thuê trọ, số CMND người thuê			Thanh	Done
 //	trọ, ngày tháng năm sinh người thuê trọ, chỉ số điện, chỉ số nước, đơn giá phòng trọ			
@@ -42,8 +41,10 @@ void outputFile(PhongTro list[], int n);
 void input1Phong(PhongTro& room);
 bool push(PhongTro list[], int& bottom, int& top, PhongTro x, int& n);
 bool pop(PhongTro list[], int& front, int& rear, int& n);
-
-void main()
+void ouputPhongCoDonGiaCaoNhat(PhongTro list[], int &n);
+void findRoomByName(PhongTro list[],int &n,string name);
+string toLowerCase(string &s1);
+int main()
 {
 	PhongTro a[MAX];
 	int rear, front, key, n = 0;	// Key là user chọn
@@ -131,13 +132,19 @@ void main()
 //===============================================================
 		case 7:
 			if (inp)
-				outputFile(a, n);
+				ouputPhongCoDonGiaCaoNhat(a,n);
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
 		case 8:
 			if (inp)
-				outputFile(a, n);
+				{
+					string ten;
+					cin.ignore();
+				cout<<"Nhap ten can tim: ";
+				getline(cin, ten);
+				findRoomByName(a,n,ten);
+				}
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
@@ -171,6 +178,8 @@ void main()
 		cout << "Nhan phim bat ky de quay ve menu! \n";
 		_getch();
 	} while (key > 0 && key < 13);
+	system("pause");
+	return 0;
 }
 
 // Xóa cách 2 đầu
@@ -494,4 +503,55 @@ bool pop(PhongTro list[], int& front, int& rear, int& n)
 		return 1;
 	}
 	return 0;
+}
+void ouputPhongCoDonGiaCaoNhat(PhongTro list[], int &n)
+{
+	PhongTro room[MAX];
+	int front=-1,rear=-1,m=0;
+	double maxElectric=0;
+	int kt=0;
+	for(int i=0; i<n ; i++) 
+	{
+          if(maxElectric<list[i].electric)
+		   {
+			   maxElectric=list[i].electric;
+			   kt=1;
+		   }		
+	}
+	if(kt==1)
+	for(int i=0; i<n ; i++) 
+	{
+          if(maxElectric==list[i].electric)
+		 push(room,front,rear,list[i],m);
+	}
+	outputList(room,m);
+}
+void findRoomByName(PhongTro list[],int &n,string name)
+{
+	PhongTro room[MAX];
+	int kt=0;
+	int front=-1,rear=-1,m=0;
+	for(int i=0; i<n; i++)
+	{
+		if(toLowerCase(name).compare(toLowerCase(list[i].name))==0)
+		{
+			push(room,front,rear,list[i],m);
+			kt=1;
+		}
+	}
+	if(kt==1) 
+	outputList(room,m);
+	else
+	cout<<"Khong tim thay \n";
+}
+string toLowerCase(string &s1)
+{
+	string m=s1;
+	int i=0;
+	while(i<m.size())
+	{
+		m[i]=tolower(m[i]);
+		i++;
+	}
+	return m;
 }
