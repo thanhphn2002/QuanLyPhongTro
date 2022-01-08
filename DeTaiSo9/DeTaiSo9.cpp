@@ -16,8 +16,8 @@ using namespace std;
 //	6. Tìm phòng trọ có chỉ số điện cao nhất.														Done
 //	7. Tìm phòng trọ của người thuê trọ có họ tên “ Tran Van A”.									Done
 //	8. Đếm số phòng trọ có đơn giá phòng trọ cao nhất.												Thiên
-//	9. Đếm số phòng trọ có người thuê trọ có năm sinh < 2002.										Thiên
-//	10. Tính tổng chỉ số điện của tất cả các phòng trọ trong nhà trọ.								My
+//	9. Đếm số phòng trọ có người thuê trọ có năm sinh < 2002.										Done
+//	10. Tính tổng chỉ số điện của tất cả các phòng trọ trong nhà trọ.								Done
 //	11. Mỗi nhà trọ là một đỉnh trong đồ thị, khoảng cách là trọng số cạnh nối.Tìm đường đi			My
 //	từ nhà trọ này sang nhà trọ khác bằng phương pháp duyệt theo chiều rộng.
 
@@ -33,13 +33,13 @@ struct PhongTro
 	BirthDay DOB;	// Ngày tháng năm sinh của người thuê trọ
 	double water, electric, price;	// Chỉ số điện, nước, đơn giá phòng
 };
-
 void init(int& front, int& rear, int n);
 void inputList(PhongTro list[], int n);
 void outputList(PhongTro list[], int n, int front);
 bool inputFile(PhongTro list[], int& n);
 void outputFile(PhongTro list[], int front, int rear, int n);
-void input1Phong(PhongTro& room);
+bool checkIDPhongTonTai(PhongTro list[], int n, string IDRoom);
+void input1Phong(PhongTro list[], int n,PhongTro& room);
 bool push(PhongTro list[], int& bottom, int& top, PhongTro x, int& n);
 bool pop(PhongTro list[], int& front, int& rear, int& n);
 void ouputPhongDienCaoNhat(PhongTro list[], int front, int rear);
@@ -48,7 +48,8 @@ bool checkBirth(PhongTro room);
 void capitalize(string& s);
 void deleteSpace(string& s);
 void trim(string& s);
-
+int demSoPhongTroByNamSinh(PhongTro list[], int front, int rear);
+double TongChiSoDien(PhongTro list[], int front, int rear);
 int main()
 {
 	PhongTro a[MAX];
@@ -120,7 +121,7 @@ int main()
 		case 5:
 		{
 			PhongTro x;
-			input1Phong(x);
+			input1Phong(a,n,x);
 			if (push(a, front, rear, x, n))
 				cout << "Them thanh cong! \n";
 			else
@@ -176,13 +177,13 @@ int main()
 			break;
 		case 10:
 			if (inp)
-				cout << "Nhap File thanh cong! \n";
+				cout << "Phong tro co "<<demSoPhongTroByNamSinh(a, front, rear)<<" phong \n";
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
 		case 11:
 			if (inp)
-				cout << "Nhap File thanh cong! \n";
+				cout << "Tong chi so dien: "<<TongChiSoDien(a, front, rear)<<" \n";
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
@@ -273,9 +274,18 @@ bool checkBirth(PhongTro room)
 	}
 	return false;
 }
+bool checkIDPhongTonTai(PhongTro list[], int n, string IDRoom)
+{
+	  for(int i=0; i <n; i++)
+	{
+		if(list[i].idRoom.compare(IDRoom)==0)
+		return false;
+	}
+	return true;
+}
 
 // Nhập 1 phòng
-void input1Phong(PhongTro& room)
+void input1Phong(PhongTro list[], int n,PhongTro& room)
 {
 	cin.ignore();
 	cout << "+ Nhap ma phong tro: ";
@@ -283,9 +293,9 @@ void input1Phong(PhongTro& room)
 	{
 		getline(cin, room.idRoom);
 		trim(room.idRoom);
-		if (room.idRoom.size() == 0)
+		if (room.idRoom.size() == 0||!checkIDPhongTonTai(list,n,room.idRoom))
 			cout << "Khong hop le! Nhap lai: ";
-	} while (room.idRoom.size() == 0);
+	} while (room.idRoom.size() == 0||!checkIDPhongTonTai(list,n,room.idRoom));
 	deleteSpace(room.idRoom);
 	room.idRoom.substr(0, 5);	// Mã phòng tối đa 5 ký tự
 
@@ -345,12 +355,12 @@ void input1Phong(PhongTro& room)
 }
 
 // Nhập nhiều phòng
-void inputList(PhongTro list[], int n)
+void inputList(PhongTro list[],int n)
 {
 	for (int i = 0; i < n; i++)
 	{
 		cout << "Nhap thong tin phong tro thu " << i + 1 << endl;
-		input1Phong(list[i]);
+		input1Phong(list,n,list[i]);
 		cout << "========================================================== \n";
 	}
 }
@@ -578,4 +588,23 @@ void findRoomByName(PhongTro list[], int front, int rear, string name)
 		outputList(room, dau, cuoi);
 	else
 		cout << "khong tim thay \n";
+}
+int demSoPhongTroByNamSinh(PhongTro list[], int front, int rear)
+{
+	int dem=0;
+   for (int i = front; i <= rear; i++)
+   {
+	   if(list[i].DOB.year<2002)
+	     dem++;
+   }
+   return dem;
+}
+double TongChiSoDien(PhongTro list[], int front, int rear)
+{
+	double dem=0;
+   for (int i = front; i <= rear; i++)
+   {
+	   	     dem+=list[i].electric;
+   }
+   return dem;
 }
