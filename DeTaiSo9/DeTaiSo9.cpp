@@ -15,7 +15,7 @@ using namespace std;
 // ==================================================================================================================================
 //	6. Tìm phòng trọ có chỉ số điện cao nhất.														Done
 //	7. Tìm phòng trọ của người thuê trọ có họ tên “ Tran Van A”.									Done
-//	8. Đếm số phòng trọ có đơn giá phòng trọ cao nhất.												Thiên
+//	8. Đếm số phòng trọ có đơn giá phòng trọ cao nhất.												Done
 //	9. Đếm số phòng trọ có người thuê trọ có năm sinh < 2002.										Done
 //	10. Tính tổng chỉ số điện của tất cả các phòng trọ trong nhà trọ.								Done
 //	11. Mỗi nhà trọ là một đỉnh trong đồ thị, khoảng cách là trọng số cạnh nối.Tìm đường đi			My
@@ -48,7 +48,8 @@ bool checkBirth(PhongTro room);
 void capitalize(string& s);
 void deleteSpace(string& s);
 void trim(string& s);
-int demSoPhongTroByNamSinh(PhongTro list[], int front, int rear);
+void demSoPhongTroDonGiaMax(PhongTro list[], int front, int rear);
+void demSoPhongTroByNamSinh(PhongTro list[], int front, int rear);
 double TongChiSoDien(PhongTro list[], int front, int rear);
 int main()
 {
@@ -171,13 +172,15 @@ int main()
 			break;
 		case 9:
 			if (inp)
-				cout << "Nhap File thanh cong! \n";
+			{
+                demSoPhongTroDonGiaMax(a, front, rear);
+			}
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
 		case 10:
 			if (inp)
-				cout << "Phong tro co "<<demSoPhongTroByNamSinh(a, front, rear)<<" phong \n";
+				demSoPhongTroByNamSinh(a, front, rear);
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
@@ -550,18 +553,18 @@ void ouputPhongDienCaoNhat(PhongTro list[], int front, int rear)
 	PhongTro room[MAX];
 	int dau = -1, cuoi = -1, m = 0;
 	double maxelectric = -1;
-	bool kt = false;
+	//bool kt = false;
 
 	for (int i = front; i <= rear; i++)
 	{
 		if (maxelectric < list[i].electric)
 		{
 			maxelectric = list[i].electric;
-			kt = true;
+			//kt = true;
 		}
 	}
 
-	if (kt == true)
+	//if (kt == true)
 		for (int i = front; i <= rear; i++)
 		{
 			if (maxelectric == list[i].electric)
@@ -589,15 +592,47 @@ void findRoomByName(PhongTro list[], int front, int rear, string name)
 	else
 		cout << "khong tim thay \n";
 }
-int demSoPhongTroByNamSinh(PhongTro list[], int front, int rear)
+void demSoPhongTroDonGiaMax(PhongTro list[], int front, int rear)
 {
 	int dem=0;
+	PhongTro room[MAX];
+	int dau = -1, cuoi = -1, m = 0;
+	double maxprice = -1;
+	//bool kt = false;
+	for(int i = front; i <= rear; i++)
+	{
+		if(maxprice<list[i].price)
+		  { 
+			  maxprice= list[i].price;
+			  //kt=true;
+		  }
+	}
+		for (int i = front; i <= rear; i++)
+		{
+			if (maxprice == list[i].price)
+				{
+					push(room, dau, cuoi, list[i], m);
+					dem++;
+				}
+		}
+		cout<<"Co "<<dem<<" phong tro co don gia phong cao nhat \n";
+	outputList(room, dau, cuoi);
+}
+void demSoPhongTroByNamSinh(PhongTro list[], int front, int rear)
+{
+	int dem=0;
+	 PhongTro room[MAX];
+	int dau = -1, cuoi = -1, m = 0;
    for (int i = front; i <= rear; i++)
    {
 	   if(list[i].DOB.year<2002)
-	     dem++;
+	     {
+			 push(room, dau, cuoi, list[i], m);
+			 dem++;
+		 }
    }
-   return dem;
+   outputList(room, dau, cuoi);
+   
 }
 double TongChiSoDien(PhongTro list[], int front, int rear)
 {
