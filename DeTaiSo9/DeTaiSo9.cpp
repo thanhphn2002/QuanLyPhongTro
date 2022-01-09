@@ -25,14 +25,14 @@ struct BirthDay
 {
 	int day, month, year;
 };
-int size;
+int nSize;
 int b[MAX][MAX];
 string vtex[MAX];
 int C[MAX];
 int D[MAX];
 int bfs[MAX];
 int nbfs;
-int count;
+int ndem;
 int np;
 // Thông tin phòng trọ
 struct PhongTro
@@ -110,7 +110,7 @@ int main()
 				if (n <= 0 || n > 100)
 					cout << "Nhap sai! Nhap lai (0 < n <= 100): ";
 			} while (n <= 0 || n > 100);
-			size=n;
+			nSize=n;
 			inputList(a, n);
 			init(front, rear, n);
 
@@ -123,7 +123,7 @@ int main()
 				cout << "Nhap File thanh cong! \n";
 				init(front, rear, n);
 				inp = true;
-				size=n;
+				nSize=n;
 			}
 			else
 				cout << "Thong tin trong File khong hop le hoac File khong ton tai! \n";
@@ -149,7 +149,7 @@ int main()
 			input1Phong(a,n,x);
 			if (push(a, front, rear, x, n))
 				{
-					size=n;
+					nSize=n;
 					cout << "Them thanh cong! \n";
 				}
 			else
@@ -162,7 +162,7 @@ int main()
 			{
 				if (pop(a, front, rear, n))
 					{
-						size=n;
+						nSize=n;
 						cout << "Xoa thanh cong! \n";
 					}
 				else
@@ -232,16 +232,17 @@ int main()
 					cin>>start;
 					cout<<"\n Nhap diem muon toi: ";
 					cin>>end;
-					} while((start<0 || start>=size )&&( end<0 || end>=size ));
+					} while((start<0 || start>=nSize )&&( end<0 || end>=nSize ));
 					BFS(start,end);
 					cout<<"BFS : ";
 					xuatKQ(bfs,nbfs); 
 					for(int i=0; i<nbfs-1; i++)
 					{
-						count+=D[i];
+						ndem+=D[i];
 					}
-					cout<<"\n Do dai quang duong tu "<<vtex[start]<<" toi "<<vtex[end]<<" la: "<<count;
+					cout<<"\n Do dai quang duong tu "<<vtex[start]<<" toi "<<vtex[end]<<" la: "<<ndem;
 					cout<<endl;
+					ndem=0;
 				}
 			else
 				cout << "Chua nhap du lieu! \n";
@@ -693,19 +694,19 @@ double TongChiSoDien(PhongTro list[], int front, int rear)
    }
    return d;
 }
-void taoVtex(PhongTro list[], int front, int rear)
+void taoVtex(PhongTro list[], int front, int rear)//truyen idroom vao mang vtex;
 {
      for(int i = front; i <= rear; i++)
 	 vtex[i] = list[i].idRoom;
 }
-void khoiTaoChuaXet()
+void khoiTaoChuaXet()//khoi tao mang chua dinh dang xet
 {
-    for(int i=0; i<size; i++)
+    for(int i=0; i<nSize; i++)
     {
         C[i]=1;
     }
 }
-void init_Queue()
+void init_Queue()//khoi tao queue
 {
     dau=cuoi=NULL;
 }
@@ -739,20 +740,16 @@ void Pop_Queue(int &x)
       delete p;
   }
 }
-void xuatKQ(int a[MAX],int n)
+void xuatKQ(int a[MAX],int n)//xuat quang duong di
 {
     for(int i=0; i<n; i++)
     {
         cout<<vtex[a[i]]<<" ";
     }
 }
-void nhap(int a[][MAX],int &n)
+void nhap(int a[][MAX],int &n)//nhap ban phim ma tran ke
 {
-//     do{
-//    cout<<"Nhap so luong dinh: ";
-//    cin>>n;
-//     }while(n<0||n>MAX||);
-    cout<<"Co "<<size<<" phong\n";
+    cout<<"Co "<<nSize<<" phong\n";
       for(int i=0; i<n; i++ )
       {
           cout<<"Nhap gia tri ke o dong thu "<<i<<": ";
@@ -763,34 +760,7 @@ void nhap(int a[][MAX],int &n)
           cout<<endl;
       }
 }
-void inputFromFile(int a[][MAX],int &n)
-{
-     ifstream in;
-     in.open("data.txt");
-  if(in.fail())
-  {  
-      cout<<"khong mo duoc file ";
-  }
-  else
-  { 
-                 in>>n;
-           for(int i=0; i<n; i++)
-               {
-                   in>>vtex[i];
-               }
-            for(int i=0; i<n;i++)
-            {
-                for(int j=0;j<n; j++)
-                {
-                    in>>a[i][j];
-                }
-            }
-            cout<<"Doc ma tran ke thanh cong \n";
-            in.close();
-     }
-          
-}
-void xuat(int a[][MAX],int n)
+void xuat(int a[][MAX],int n)//xuat ma tran ke
 {
     for(int i=0;i<n;i++)
        cout<<"\t"<<vtex[i];
@@ -808,9 +778,10 @@ void xuat(int a[][MAX],int n)
  void BFS(int start,int end)
  {
      int p;
-	 D[MAX]=NULL;
+	 D[MAX]=NULL;//mang luu trong so cua cac doan duong
 	 bfs[MAX]=NULL;
 	 nbfs=0;
+	 np=0;
      khoiTaoChuaXet();
      init_Queue();
      push_Queue(start);
@@ -824,7 +795,7 @@ void xuat(int a[][MAX],int n)
       {  
           return;
       }
-     for(int w=0; w< size; w++)
+     for(int w=0; w< nSize; w++)
      {
          if(C[w]==1&&b[p][w]!=0)
          {
