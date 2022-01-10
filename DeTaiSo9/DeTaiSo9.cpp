@@ -335,7 +335,7 @@ void input1Phong(PhongTro list[], int n, PhongTro& room)
 			cout << "Khong hop le! Nhap lai: ";
 	} while (room.idRoom.size() == 0);
 	deleteSpace(room.idRoom);
-	room.idRoom.substr(0, 5);	// Mã phòng tối đa 5 ký tự
+	room.idRoom = room.idRoom.substr(0, 5);	// Mã phòng tối đa 5 ký tự
 
 	cout << "+ Nhap ho ten nguoi thue tro: ";
 	do
@@ -346,7 +346,7 @@ void input1Phong(PhongTro list[], int n, PhongTro& room)
 			cout << "Khong hop le! Nhap lai: ";
 	} while (room.name.size() == 0);
 	capitalize(room.name);		// Format Họ tên
-	room.name.substr(0, 50);	// Họ tên tối đa 50 ký tự
+	room.name = room.name.substr(0, 50);	// Họ tên tối đa 50 ký tự
 
 	cout << "+ Nhap so CMND: ";
 	do
@@ -357,7 +357,7 @@ void input1Phong(PhongTro list[], int n, PhongTro& room)
 			cout << "Khong hop le! Nhap lai: ";
 	} while (room.idCard.size() == 0);
 	deleteSpace(room.idCard);
-	room.idCard.substr(0, 12);	// Số CMND tối đa 12 ký tự
+	room.idCard = room.idCard.substr(0, 12);	// Số CMND tối đa 12 ký tự
 
 	cout << "+ Nhap ngay sinh: ";
 	do
@@ -463,7 +463,7 @@ bool inputFile(PhongTro list[], int& n)
 					list[i].idRoom = temp.erase(0, 1);
 					if (list[i].idRoom.size() == 0) return false;
 					deleteSpace(list[i].idRoom);
-					list[i].idRoom.substr(0, 5);
+					list[i].idRoom = list[i].idRoom.substr(0, 5);
 				}
 
 				break;
@@ -473,7 +473,7 @@ bool inputFile(PhongTro list[], int& n)
 					trim(list[i].name);
 					if (list[i].name.size() == 0) return false;
 					capitalize(list[i].name);		// Format Họ tên
-					list[i].name.substr(0, 50);	// Họ tên tối đa 50 ký tự
+					list[i].name = list[i].name.substr(0, 50);	// Họ tên tối đa 50 ký tự
 				}
 				break;
 				case 2:
@@ -482,7 +482,7 @@ bool inputFile(PhongTro list[], int& n)
 					trim(list[i].idCard);
 					if (list[i].idCard.size() == 0) return false;
 					deleteSpace(list[i].idCard);
-					list[i].idCard.substr(0, 5);
+					list[i].idCard = list[i].idCard.substr(0, 5);
 				}
 				break;
 				case 3:
@@ -533,7 +533,7 @@ void outputFile(PhongTro list[], int front, int rear, int n)
 
 	fo << n << endl;
 	if (rear != -1)
-		for (int i = front; i < rear; i++)
+		for (int i = front; i <= rear; i++)
 		{
 			fo << list[i].idRoom << ", "
 				<< list[i].name << ", "

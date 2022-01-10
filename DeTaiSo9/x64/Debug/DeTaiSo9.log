@@ -1,9 +1,6 @@
 ﻿  DeTaiSo9.cpp
-C:\Users\Thong\Desktop\QuanLyPhongTro\DeTaiSo9\DeTaiSo9.cpp(349,13): warning C4834: discarding return value of function with 'nodiscard' attribute
-C:\Users\Thong\Desktop\QuanLyPhongTro\DeTaiSo9\DeTaiSo9.cpp(360,11): warning C4834: discarding return value of function with 'nodiscard' attribute
-C:\Users\Thong\Desktop\QuanLyPhongTro\DeTaiSo9\DeTaiSo9.cpp(371,13): warning C4834: discarding return value of function with 'nodiscard' attribute
-C:\Users\Thong\Desktop\QuanLyPhongTro\DeTaiSo9\DeTaiSo9.cpp(477,20): warning C4834: discarding return value of function with 'nodiscard' attribute
-C:\Users\Thong\Desktop\QuanLyPhongTro\DeTaiSo9\DeTaiSo9.cpp(487,18): warning C4834: discarding return value of function with 'nodiscard' attribute
-C:\Users\Thong\Desktop\QuanLyPhongTro\DeTaiSo9\DeTaiSo9.cpp(496,20): warning C4834: discarding return value of function with 'nodiscard' attribute
-C:\Users\Thong\Desktop\QuanLyPhongTro\DeTaiSo9\DeTaiSo9.cpp(501,32): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Thong\Desktop\QuanLyPhongTro\DeTaiSo9\DeTaiSo9.cpp(466,20): warning C4834: discarding return value of function with 'nodiscard' attribute
+C:\Users\Thong\Desktop\QuanLyPhongTro\DeTaiSo9\DeTaiSo9.cpp(476,18): warning C4834: discarding return value of function with 'nodiscard' attribute
+C:\Users\Thong\Desktop\QuanLyPhongTro\DeTaiSo9\DeTaiSo9.cpp(485,20): warning C4834: discarding return value of function with 'nodiscard' attribute
+C:\Users\Thong\Desktop\QuanLyPhongTro\DeTaiSo9\DeTaiSo9.cpp(490,32): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   DeTaiSo9.vcxproj -> C:\Users\Thong\Desktop\QuanLyPhongTro\DeTaiSo9\x64\Debug\DeTaiSo9.exe
