@@ -533,7 +533,7 @@ void outputFile(PhongTro list[], int front, int rear, int n)
 
 	fo << n << endl;
 	if (rear != -1)
-		for (int i = front; i < rear; i++)
+		for (int i = front; i <= rear; i++)
 		{
 			fo << list[i].idRoom << ", "
 				<< list[i].name << ", "
