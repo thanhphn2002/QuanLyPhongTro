@@ -5,7 +5,7 @@
 using namespace std;
 #define MAX 100 // Có tối đa 100 phòng
 
-//										Đề tài số 9: Quản lý phòng trọ
+//									Đề tài số 9: Quản lý phòng trọ
 //	1. Mỗi nhà trọ các thông tin : mã phòng trọ, họ tên người thuê trọ, số CMND người thuê			Done
 //	trọ, ngày tháng năm sinh người thuê trọ, chỉ số điện, chỉ số nước, đơn giá phòng trọ			
 //	2. Tạo Queue chứa thông tin Nhà trọ bằng 2 cách : nhập từ bàn phím và đọc / ghi từ file txt.	Done
@@ -17,7 +17,7 @@ using namespace std;
 //	8. Đếm số phòng trọ có đơn giá phòng trọ cao nhất.												Done
 //	9. Đếm số phòng trọ có người thuê trọ có năm sinh < 2002.										Done
 //	10. Tính tổng chỉ số điện của tất cả các phòng trọ trong nhà trọ.								Done
-//	11. Mỗi nhà trọ là một đỉnh trong đồ thị, khoảng cách là trọng số cạnh nối.Tìm đường đi			Done
+//	11. Mỗi nhà trọ là một đỉnh trong đồ thị, khoảng cách là trọng số cạnh nối. Tìm đường đi		Done
 //	từ nhà trọ này sang nhà trọ khác bằng phương pháp duyệt theo chiều rộng.
 
 struct BirthDay
@@ -46,8 +46,7 @@ void inputList(PhongTro list[], int n);
 void outputList(PhongTro list[], int n, int front);
 bool inputFile(PhongTro list[], int& n);
 void outputFile(PhongTro list[], int front, int rear, int n);
-bool checkIDPhongTonTai(PhongTro list[], int n, string IDRoom);
-void input1Phong(PhongTro list[], int n,PhongTro& room);
+void input1Phong(PhongTro list[], int n, PhongTro& room);
 bool push(PhongTro list[], int& bottom, int& top, PhongTro x, int& n);
 bool pop(PhongTro list[], int& front, int& rear, int& n);
 void pushBFS(int a[], int& front, int& rear, int x);
@@ -62,10 +61,10 @@ void demSoPhongTroDonGiaMax(PhongTro list[], int front, int rear);
 void demSoPhongTroByNamSinh(PhongTro list[], int front, int rear);
 double TongChiSoDien(PhongTro list[], int front, int rear);
 void taoVtex(PhongTro list[], int front, int rear);
-void BFS(int start,int end, int front, int rear);
+void BFS(int start, int end, int front, int rear);
 void nhap(int a[][MAX], int n, int front, int rear);
-void xuat(int a[][MAX] ,int n, int front, int rear);
-void xuatKQ(int a[MAX], int n, int front, int rear);
+void xuat(int a[][MAX], int n, int front, int rear);
+void xuatKQ(int a[MAX], int n);
 
 int main()
 {
@@ -139,7 +138,7 @@ int main()
 		case 5:
 		{
 			PhongTro x;
-			input1Phong(a,n,x);
+			input1Phong(a, n, x);
 			if (push(a, front, rear, x, n))
 				cout << "Them thanh cong! \n";
 			else
@@ -188,7 +187,7 @@ int main()
 			break;
 		case 9:
 			if (inp)
-                demSoPhongTroDonGiaMax(a, front, rear);
+				demSoPhongTroDonGiaMax(a, front, rear);
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
@@ -206,39 +205,39 @@ int main()
 			break;
 		case 12:
 			if (inp)
+			{
+				int start, end;
+				taoVtex(a, front, rear);
+				nhap(b, n, front, rear);
+				xuat(b, n, front, rear);
+
+				cout << "Nhap diem bat dau: ";
+				do
 				{
-					int start, end;
-					taoVtex(a, front, rear);
-					nhap(b, n, front, rear);
-					xuat(b, n, front, rear);
+					cin >> start;
+					if (start < front + 1 || start > rear + 1)
+						cout << "Khong hop le! Nhap lai: ";
+				} while (start < front + 1 || start > rear + 1);
 
-					cout << "Nhap diem bat dau: ";
-					do 
-					{						
-						cin >> start;
-						if (start < front + 1 || start > rear + 1)
-							cout << "Khong hop le! Nhap lai: ";
-					} while (start < front + 1 || start > rear + 1);
+				cout << "Nhap diem ket thuc: ";
+				do
+				{
+					cin >> end;
+					if (end < front + 1 || end > rear + 1)
+						cout << "Khong hop le! Nhap lai: ";
+				} while (end < front + 1 || end > rear + 1);
 
-					cout << "Nhap diem ket thuc: ";
-					do
-					{
-						cin >> end;
-						if (end < front + 1 || end > rear + 1)
-							cout << "Khong hop le! Nhap lai: ";
-					} while (end < front + 1 || end > rear + 1);
+				BFS(start - 1, end - 1, front, rear);
+				cout << "Quang duong BFS: ";
+				xuatKQ(bfs, nbfs);
 
-					BFS(start - 1, end - 1, front, rear);
-					cout << "Quang duong BFS: ";
-					xuatKQ(bfs, nbfs, front, rear); 
+				for (int i = 0; i < nbfs - 1; i++)
+					ndem += D[i];
 
-					for(int i = 0; i < nbfs - 1; i++)
-						ndem += D[i];			
-
-					cout << "Do dai quang duong tu " << vtex[start - 1] << " toi " << vtex[end - 1] << " la: " << ndem;
-					cout << endl;
-					ndem = 0;
-				}
+				cout << "Do dai quang duong tu " << vtex[start - 1] << " toi " << vtex[end - 1] << " la: " << ndem;
+				cout << endl;
+				ndem = 0;
+			}
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
@@ -323,18 +322,8 @@ bool checkBirth(PhongTro room)
 	return false;
 }
 
-bool checkIDPhongTonTai(PhongTro list[], int n, string IDRoom)
-{
-	  for(int i=0; i <n; i++)
-	  {
-		if(list[i].idRoom.compare(IDRoom) == 0)
-	 	return false;
-	  }
-	return true;
-}
-
 // Nhập 1 phòng
-void input1Phong(PhongTro list[], int n,PhongTro& room)
+void input1Phong(PhongTro list[], int n, PhongTro& room)
 {
 	cin.ignore();
 	cout << "+ Nhap ma phong tro: ";
@@ -342,9 +331,9 @@ void input1Phong(PhongTro list[], int n,PhongTro& room)
 	{
 		getline(cin, room.idRoom);
 		trim(room.idRoom);
-		if (room.idRoom.size() == 0 || !checkIDPhongTonTai(list,n,room.idRoom))
+		if (room.idRoom.size() == 0)
 			cout << "Khong hop le! Nhap lai: ";
-	} while (room.idRoom.size() == 0 || !checkIDPhongTonTai(list,n,room.idRoom));
+	} while (room.idRoom.size() == 0);
 	deleteSpace(room.idRoom);
 	room.idRoom.substr(0, 5);	// Mã phòng tối đa 5 ký tự
 
@@ -404,12 +393,12 @@ void input1Phong(PhongTro list[], int n,PhongTro& room)
 }
 
 // Nhập nhiều phòng
-void inputList(PhongTro list[],int n)
+void inputList(PhongTro list[], int n)
 {
 	for (int i = 0; i < n; i++)
 	{
 		cout << "Nhap thong tin phong tro thu " << i + 1 << endl;
-		input1Phong(list,n,list[i]);
+		input1Phong(list, n, list[i]);
 		cout << "========================================================== \n";
 	}
 }
@@ -440,7 +429,7 @@ void outputList(PhongTro list[], int front, int rear)
 	if (rear != -1)
 		for (int i = front; i <= rear; i++)
 		{
-			cout << "Thong tin phong tro thu " << i + 1 << endl;
+			cout << "Thong tin phong tro thu " << i - front + 1 << endl;
 			output1Phong(list[i]);
 			cout << "========================================================== \n";
 		}
@@ -623,8 +612,8 @@ void ouputPhongDienCaoNhat(PhongTro list[], int front, int rear)
 
 	for (int i = front; i <= rear; i++)
 	{
-		if (maxelectric < list[i].electric)		
-			maxelectric = list[i].electric;		
+		if (maxelectric < list[i].electric)
+			maxelectric = list[i].electric;
 	}
 
 	for (int i = front; i <= rear; i++)
@@ -662,9 +651,9 @@ void demSoPhongTroDonGiaMax(PhongTro list[], int front, int rear)
 	int dau = -1, cuoi = -1, m = 0;
 	double maxprice = -1;
 
-	for(int i = front; i <= rear; i++)
+	for (int i = front; i <= rear; i++)
 	{
-		if(maxprice < list[i].price)	  
+		if (maxprice < list[i].price)
 			maxprice = list[i].price;
 	}
 
@@ -677,7 +666,7 @@ void demSoPhongTroDonGiaMax(PhongTro list[], int front, int rear)
 		}
 	}
 
-	cout<<"Co "<< d <<" phong tro co don gia phong cao nhat \n";
+	cout << "Co " << d << " phong tro co don gia phong cao nhat \n";
 	outputList(room, dau, cuoi);
 }
 
@@ -688,13 +677,13 @@ void demSoPhongTroByNamSinh(PhongTro list[], int front, int rear)
 	int dau = -1, cuoi = -1, m = 0;
 
 	for (int i = front; i <= rear; i++)
-    {
-	   if(list[i].DOB.year < 2002)
-	     {
-			 push(room, dau, cuoi, list[i], m);
-			 d++;
-		 }
-    }
+	{
+		if (list[i].DOB.year < 2002)
+		{
+			push(room, dau, cuoi, list[i], m);
+			d++;
+		}
+	}
 
 	cout << "Co " << d << " phong tro \n";
 	outputList(room, dau, cuoi);
@@ -706,29 +695,29 @@ double TongChiSoDien(PhongTro list[], int front, int rear)
 
 	for (int i = front; i <= rear; i++)
 		sum += list[i].electric;
-	
+
 	return sum;
 }
 
 // Tạo dòng tên phòng
-void taoVtex(PhongTro list[], int front, int rear) 
+void taoVtex(PhongTro list[], int front, int rear)
 {
-     for (int i = front; i <= rear; i++)
-		 vtex[i] = list[i].idRoom;
+	for (int i = front; i <= rear; i++)
+		vtex[i] = list[i].idRoom;
 }
 
 // Khởi tạo mảng chứa đỉnh đang xét
 void khoiTaoChuaXet(int front, int rear)
 {
-    for (int i = front; i <= rear; i++)
-        C[i] = 1;  
+	for (int i = front; i <= rear; i++)
+		C[i] = 1;
 }
 
 // Đường đi BFS
-void xuatKQ(int b[MAX], int n, int front, int rear)
+void xuatKQ(int b[MAX], int n)
 {
-    for (int i = 0; i < n; i++)  
-		cout << vtex [b[i]] << " ";
+	for (int i = 0; i < n; i++)
+		cout << vtex[b[i]] << " ";
 
 	cout << endl;
 }
@@ -736,63 +725,63 @@ void xuatKQ(int b[MAX], int n, int front, int rear)
 // Nhập ma trận kề
 void nhap(int b[][MAX], int n, int front, int rear)
 {
-    cout << "Co " << n << " phong \n";
+	cout << "Co " << n << " phong \n";
 	for (int i = front; i <= rear; i++)
-    {
-        cout << "Nhap gia tri ke phong thu " << i + 1 << ": ";
+	{
+		cout << "Nhap gia tri ke phong thu " << i + 1 << ": ";
 
-        for(int j = front; j <= rear; j++)
+		for (int j = front; j <= rear; j++)
 			cin >> b[i][j];
-    }
+	}
 }
 
 // Xuất ma trận kề
 void xuat(int b[][MAX], int n, int front, int rear)
 {
-    for (int i = front; i <= rear; i++)
-       cout << "\t" << vtex[i];
-       cout << endl;
+	for (int i = front; i <= rear; i++)
+		cout << "\t" << vtex[i];
+	cout << endl;
 
-    for (int i = front; i <= rear; i++)
-    {
-        cout << vtex[i];
-        for(int j = front; j <= rear; j++)
+	for (int i = front; i <= rear; i++)
+	{
+		cout << vtex[i];
+		for (int j = front; j <= rear; j++)
 			cout << "\t" << b[i][j];
 
-        cout << endl;
-    }
+		cout << endl;
+	}
 }
 
 void BFS(int start, int end, int front, int rear)
 {
-	 int a[MAX];
-	 int dau = -1, cuoi = -1, p, m = 0;
-	
-	 D[MAX] = bfs[MAX] = 0;
-	 nbfs = np = 0;
-     khoiTaoChuaXet(front, rear);
-	
-     pushBFS(a, dau, cuoi, start);
-     C[start] = 0;
+	int a[MAX];
+	int dau = -1, cuoi = -1, p, m = 0;
 
-	 while (dau != -1)
-	 {
-		  popBFS(a, dau, cuoi, p);
-		  bfs[nbfs] = p;
-		  nbfs++;
-		  if (p == end) return;
-		  
+	D[MAX] = bfs[MAX] = 0;
+	nbfs = np = 0;
+	khoiTaoChuaXet(front, rear);
 
-		 for (int w = front; w <= rear; w++)
-		 {
-			 if (C[w] == 1 && b[p][w] != 0)
-			 {
+	pushBFS(a, dau, cuoi, start);
+	C[start] = 0;
+
+	while (dau != -1)
+	{
+		popBFS(a, dau, cuoi, p);
+		bfs[nbfs] = p;
+		nbfs++;
+		if (p == end) return;
+
+
+		for (int w = front; w <= rear; w++)
+		{
+			if (C[w] == 1 && b[p][w] != 0)
+			{
 				pushBFS(a, dau, cuoi, w);
 				C[w] = 0;
 				D[np] = b[p][w];
 				np++;
-			 }
-		 }
-	 }
+			}
+		}
+	}
 }
 
