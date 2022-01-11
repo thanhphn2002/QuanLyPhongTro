@@ -206,26 +206,28 @@ int main()
 		case 12:
 			if (inp)
 			{
+				char choose;
 				string start, end;
 				taoVtex(a, front, rear);
 				nhap(b, n, front, rear);
+				do{
+					system("cls");
 				xuat(b, n, front, rear);
-
 				cout << "Nhap diem bat dau: ";
 				do
 				{
 					cin >> start;
-					if (vtexIndex(start,n) < front + 1 || vtexIndex(start,n) > rear + 1)
+					if (vtexIndex(start,n) < front  || vtexIndex(start,n) > rear + 1)
 						cout << "Khong hop le! Nhap lai: ";
-				} while (vtexIndex(start,n) < front + 1 || vtexIndex(start,n) > rear + 1);
+				} while (vtexIndex(start,n) < front  || vtexIndex(start,n) > rear + 1);
 
 				cout << "Nhap diem ket thuc: ";
 				do
 				{
 					cin >> end;
-					if (vtexIndex(end,n) < front + 1 || vtexIndex(end,n) > rear + 1)
+					if (vtexIndex(end,n) < front  || vtexIndex(end,n) > rear + 1)
 						cout << "Khong hop le! Nhap lai: ";
-				} while (vtexIndex(end,n) < front + 1 || vtexIndex(end,n) > rear + 1);
+				} while (vtexIndex(end,n) < front  || vtexIndex(end,n) > rear + 1);
 
 				BFS(start,end, front, rear,n);
 				cout << "Quang duong BFS: ";
@@ -237,6 +239,9 @@ int main()
 				cout << "Do dai quang duong tu " << start << " toi " << end << " la: " << ndem;
 				cout << endl;
 				ndem = 0;
+				cout<< "Ban muon tiep tuc khong? An phim bat ky de tiep tuc, dung thi an 0. Lua chon: ";
+				choose=_getche();
+				}while(choose !='0');
 			}
 			else
 				cout << "Chua nhap du lieu! \n";
@@ -785,6 +790,7 @@ void BFS(string &start, string &end, int front, int rear, int &n)
 			}
 		}
 	}
+	cout<<"Khong tim thay duong \n ";
 }
 int vtexIndex(string &v,int &n)
 {
