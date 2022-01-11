@@ -61,11 +61,11 @@ void demSoPhongTroDonGiaMax(PhongTro list[], int front, int rear);
 void demSoPhongTroByNamSinh(PhongTro list[], int front, int rear);
 double TongChiSoDien(PhongTro list[], int front, int rear);
 void taoVtex(PhongTro list[], int front, int rear);
-void BFS(int start, int end, int front, int rear);
+void BFS(string &start, string &end, int front, int rear,int &n);
 void nhap(int a[][MAX], int n, int front, int rear);
 void xuat(int a[][MAX], int n, int front, int rear);
 void xuatKQ(int a[MAX], int n);
-
+int vtexIndex(string &v,int &n);
 int main()
 {
 	PhongTro a[MAX];
@@ -206,7 +206,7 @@ int main()
 		case 12:
 			if (inp)
 			{
-				int start, end;
+				string start, end;
 				taoVtex(a, front, rear);
 				nhap(b, n, front, rear);
 				xuat(b, n, front, rear);
@@ -215,26 +215,26 @@ int main()
 				do
 				{
 					cin >> start;
-					if (start < front + 1 || start > rear + 1)
+					if (vtexIndex(start,n) < front + 1 || vtexIndex(start,n) > rear + 1)
 						cout << "Khong hop le! Nhap lai: ";
-				} while (start < front + 1 || start > rear + 1);
+				} while (vtexIndex(start,n) < front + 1 || vtexIndex(start,n) > rear + 1);
 
 				cout << "Nhap diem ket thuc: ";
 				do
 				{
 					cin >> end;
-					if (end < front + 1 || end > rear + 1)
+					if (vtexIndex(end,n) < front + 1 || vtexIndex(end,n) > rear + 1)
 						cout << "Khong hop le! Nhap lai: ";
-				} while (end < front + 1 || end > rear + 1);
+				} while (vtexIndex(end,n) < front + 1 || vtexIndex(end,n) > rear + 1);
 
-				BFS(start - 1, end - 1, front, rear);
+				BFS(start,end, front, rear,n);
 				cout << "Quang duong BFS: ";
 				xuatKQ(bfs, nbfs);
 
 				for (int i = 0; i < nbfs - 1; i++)
 					ndem += D[i];
 
-				cout << "Do dai quang duong tu " << vtex[start - 1] << " toi " << vtex[end - 1] << " la: " << ndem;
+				cout << "Do dai quang duong tu " << start << " toi " << end << " la: " << ndem;
 				cout << endl;
 				ndem = 0;
 			}
@@ -752,8 +752,10 @@ void xuat(int b[][MAX], int n, int front, int rear)
 	}
 }
 
-void BFS(int start, int end, int front, int rear)
+void BFS(string &start, string &end, int front, int rear, int &n)
 {
+	int s=vtexIndex(start,n);
+	int e=vtexIndex(end,n);
 	int a[MAX];
 	int dau = -1, cuoi = -1, p, m = 0;
 
@@ -761,15 +763,15 @@ void BFS(int start, int end, int front, int rear)
 	nbfs = np = 0;
 	khoiTaoChuaXet(front, rear);
 
-	pushBFS(a, dau, cuoi, start);
-	C[start] = 0;
+	pushBFS(a, dau, cuoi, s);
+	C[s] = 0;
 
 	while (dau != -1)
 	{
 		popBFS(a, dau, cuoi, p);
 		bfs[nbfs] = p;
 		nbfs++;
-		if (p == end) return;
+		if (p == e) return;
 
 
 		for (int w = front; w <= rear; w++)
@@ -783,5 +785,11 @@ void BFS(int start, int end, int front, int rear)
 			}
 		}
 	}
+}
+int vtexIndex(string &v,int &n)
+{
+	for(int i = 0; i < n; i++)
+	   if(vtex[i].compare(v) == 0) return i;
+	return -1;
 }
 
