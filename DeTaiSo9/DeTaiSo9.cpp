@@ -53,19 +53,21 @@ void pushBFS(int a[], int& front, int& rear, int x);
 void popBFS(int a[], int& front, int& rear, int& x);
 void ouputPhongDienCaoNhat(PhongTro list[], int front, int rear);
 void findRoomByName(PhongTro list[], int front, int rear, string name);
+void demSoPhongTroDonGiaMax(PhongTro list[], int front, int rear);
+void demSoPhongTroByNamSinh(PhongTro list[], int front, int rear);
+double TongChiSoDien(PhongTro list[], int front, int rear);
+void BFS(string start, string end, int front, int rear,int n);
+
+void taoVtex(PhongTro list[], int front, int rear);
+int vtexIndex(string v, int front, int rear);
+void nhap(int a[][MAX], int n, int front, int rear);
+void xuat(int a[][MAX], int front, int rear);
+void xuatKQ(int a[MAX], int n);
 bool checkBirth(PhongTro room);
 void capitalize(string& s);
 void deleteSpace(string& s);
 void trim(string& s);
-void demSoPhongTroDonGiaMax(PhongTro list[], int front, int rear);
-void demSoPhongTroByNamSinh(PhongTro list[], int front, int rear);
-double TongChiSoDien(PhongTro list[], int front, int rear);
-void taoVtex(PhongTro list[], int front, int rear);
-void BFS(string &start, string &end, int front, int rear,int &n);
-void nhap(int a[][MAX], int n, int front, int rear);
-void xuat(int a[][MAX], int n, int front, int rear);
-void xuatKQ(int a[MAX], int n);
-int vtexIndex(string &v,int &n);
+
 int main()
 {
 	PhongTro a[MAX];
@@ -210,38 +212,44 @@ int main()
 				string start, end;
 				taoVtex(a, front, rear);
 				nhap(b, n, front, rear);
-				do{
+
+				do
+				{
 					system("cls");
-				xuat(b, n, front, rear);
-				cout << "Nhap diem bat dau: ";
-				do
-				{
-					cin >> start;
-					if (vtexIndex(start,n) < front  || vtexIndex(start,n) > rear + 1)
-						cout << "Khong hop le! Nhap lai: ";
-				} while (vtexIndex(start,n) < front  || vtexIndex(start,n) > rear + 1);
+					xuat(b, front, rear);
+					cout << "Nhap diem bat dau: ";
+					do
+					{
+						cin >> start;
+						trim(start);
+						capitalize(start);
+						if (vtexIndex(start, front, rear) == -1)
+							cout << "Ma phong khong hop le! Nhap lai: ";
+					} while (vtexIndex(start, front, rear) == -1);
 
-				cout << "Nhap diem ket thuc: ";
-				do
-				{
-					cin >> end;
-					if (vtexIndex(end,n) < front  || vtexIndex(end,n) > rear + 1)
-						cout << "Khong hop le! Nhap lai: ";
-				} while (vtexIndex(end,n) < front  || vtexIndex(end,n) > rear + 1);
+					cout << "Nhap diem ket thuc: ";
+					do
+					{
+						cin >> end;
+						trim(end);
+						capitalize(end);
+						if (vtexIndex(end, front, rear) == -1)
+							cout << "Ma phong khong hop le! Nhap lai: ";
+					} while (vtexIndex(end, front, rear) == -1);
 
-				BFS(start,end, front, rear,n);
-				cout << "Quang duong BFS: ";
-				xuatKQ(bfs, nbfs);
+					BFS(start, end, front, rear, n);
+					cout << "Quang duong BFS: ";
+					xuatKQ(bfs, nbfs);
 
-				for (int i = 0; i < nbfs - 1; i++)
-					ndem += D[i];
+					for (int i = 0; i < nbfs - 1; i++)
+						ndem += D[i];
 
-				cout << "Do dai quang duong tu " << start << " toi " << end << " la: " << ndem;
-				cout << endl;
-				ndem = 0;
-				cout<< "Ban muon tiep tuc khong? An phim bat ky de tiep tuc, dung thi an 0. Lua chon: ";
-				choose=_getche();
-				}while(choose !='0');
+					cout << "Do dai quang duong tu " << start << " toi " << end << " la: " << ndem;
+					cout << endl;
+					ndem = 0;
+					cout<< "An phim bat ky de tiep tuc tim duong di, an phim 0 de dung.\nLua chon: ";
+					choose = _getche();
+				} while (choose != '0');
 			}
 			else
 				cout << "Chua nhap du lieu! \n";
@@ -340,6 +348,7 @@ void input1Phong(PhongTro list[], int n, PhongTro& room)
 			cout << "Khong hop le! Nhap lai: ";
 	} while (room.idRoom.size() == 0);
 	deleteSpace(room.idRoom);
+	capitalize(room.idRoom);
 	room.idRoom = room.idRoom.substr(0, 5);	// Mã phòng tối đa 5 ký tự
 
 	cout << "+ Nhap ho ten nguoi thue tro: ";
@@ -468,6 +477,7 @@ bool inputFile(PhongTro list[], int& n)
 					list[i].idRoom = temp.erase(0, 1);
 					if (list[i].idRoom.size() == 0) return false;
 					deleteSpace(list[i].idRoom);
+					capitalize(list[i].idRoom);
 					list[i].idRoom = list[i].idRoom.substr(0, 5);
 				}
 
@@ -733,7 +743,7 @@ void nhap(int b[][MAX], int n, int front, int rear)
 	cout << "Co " << n << " phong \n";
 	for (int i = front; i <= rear; i++)
 	{
-		cout << "Nhap gia tri ke phong thu " << i + 1 << ": ";
+		cout << "Nhap gia tri ke phong thu " << i - front + 1 << ": ";
 
 		for (int j = front; j <= rear; j++)
 			cin >> b[i][j];
@@ -741,7 +751,7 @@ void nhap(int b[][MAX], int n, int front, int rear)
 }
 
 // Xuất ma trận kề
-void xuat(int b[][MAX], int n, int front, int rear)
+void xuat(int b[][MAX], int front, int rear)
 {
 	for (int i = front; i <= rear; i++)
 		cout << "\t" << vtex[i];
@@ -757,10 +767,10 @@ void xuat(int b[][MAX], int n, int front, int rear)
 	}
 }
 
-void BFS(string &start, string &end, int front, int rear, int &n)
+void BFS(string start, string end, int front, int rear, int n)
 {
-	int s=vtexIndex(start,n);
-	int e=vtexIndex(end,n);
+	int s = vtexIndex(start, front, rear);
+	int e = vtexIndex(end, front, rear);
 	int a[MAX];
 	int dau = -1, cuoi = -1, p, m = 0;
 
@@ -792,10 +802,11 @@ void BFS(string &start, string &end, int front, int rear, int &n)
 	}
 	cout<<"Khong tim thay duong \n ";
 }
-int vtexIndex(string &v,int &n)
+
+int vtexIndex(string v, int front, int rear)
 {
-	for(int i = 0; i < n; i++)
-	   if(vtex[i].compare(v) == 0) return i;
+	for (int i = front; i <= rear; i++)
+	   if (vtex[i].compare(v) == 0) return i;
 	return -1;
 }
 
