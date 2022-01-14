@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <conio.h>
+#include <iomanip>
 #include <string>
 using namespace std;
 #define MAX 100 // Có tối đa 100 phòng
@@ -429,11 +430,11 @@ void output1Phong(PhongTro room)
 	cout << "+ Ngay sinh: ";
 	cout << room.DOB.day << "/" << room.DOB.month << "/" << room.DOB.year << endl;
 	cout << "+ Chi so dien: ";
-	cout << room.electric << endl;
+	cout << fixed << setprecision(2) << room.electric << endl;
 	cout << "+ Chi so nuoc: ";
-	cout << room.water << endl;
+	cout << fixed << setprecision(2) << room.water << endl;
 	cout << "+ Don gia phong: ";
-	cout << room.price << endl;
+	cout << fixed << setprecision(2) << room.price << endl;
 }
 
 // Xuất nhiều phòng
@@ -554,9 +555,9 @@ void outputFile(PhongTro list[], int front, int rear, int n)
 				<< list[i].name << ", "
 				<< list[i].idCard << ", "
 				<< list[i].DOB.day << "/" << list[i].DOB.month << "/" << list[i].DOB.year << ", "
-				<< list[i].electric << ", "
-				<< list[i].water << ", "
-				<< list[i].price << ", " << endl;
+				<< fixed << setprecision(2) << list[i].electric << ", "
+				<< fixed << setprecision(2) << list[i].water << ", "
+				<< fixed << setprecision(2) << list[i].price << ", " << endl;
 		}
 	cout << "Ghi File thanh cong! \n";
 	fo.close();
