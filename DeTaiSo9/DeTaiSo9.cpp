@@ -737,7 +737,6 @@ void xuatKQ(int b[MAX], int n)
 
 	cout << endl;
 }
-
 // Nhập ma trận kề
 void nhap(int b[][MAX], int n, int front, int rear)
 {
