@@ -1,3 +1,3 @@
 ﻿  DeTaiSo9.cpp
-C:\Users\User\Desktop\QuanLyPhongTro\DeTaiSo9\DeTaiSo9.cpp(506,32): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\User\Desktop\QuanLyPhongTro\DeTaiSo9\DeTaiSo9.cpp(516,32): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   DeTaiSo9.vcxproj -> C:\Users\User\Desktop\QuanLyPhongTro\DeTaiSo9\x64\Debug\DeTaiSo9.exe

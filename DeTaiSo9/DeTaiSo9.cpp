@@ -55,7 +55,7 @@ void popBFS(int a[], int& front, int& rear, int& x);
 void ouputPhongDienCaoNhat(PhongTro list[], int front, int rear);
 void findRoomByName(PhongTro list[], int front, int rear, string name);
 void demSoPhongTroDonGiaMax(PhongTro list[], int front, int rear);
-void demSoPhongTroByNamSinh(PhongTro list[], int front, int rear);
+void demSoPhongTroByNamSinh(PhongTro list[], int front, int rear, int namSinh);
 double TongChiSoDien(PhongTro list[], int front, int rear);
 void BFS(string start, string end, int front, int rear,int n);
 
@@ -88,7 +88,7 @@ int main()
 			<< "7/ Phong tro co chi so dien cao nhat \n"
 			<< "8/ Tim nguoi trong phong tro \n"
 			<< "9/ Dem so phong tro co don gia phong cao nhat \n"
-			<< "10/ Dem so phong tro co nguoi thue co nam sinh < 2002 \n"
+			<< "10/ Dem so phong tro co nguoi thue co nam sinh < X (X >= 1900) \n"
 			<< "11/ Tinh tong chi so dien \n"
 			<< "12/ BFS nhap tu ban phim \n"
 			<< "13/ Thoat \n"
@@ -196,7 +196,17 @@ int main()
 			break;
 		case 10:
 			if (inp)
-				demSoPhongTroByNamSinh(a, front, rear);
+			{
+				int namSinh;
+				cout << "Nhap nam sinh: ";
+				do
+				{
+					cin >> namSinh;
+					if (namSinh < 1900)
+						cout << "Khong hop le! Nhap lai (nam sinh >= 1900): ";
+				} while (namSinh < 1900);
+				demSoPhongTroByNamSinh(a, front, rear, namSinh);
+			}
 			else
 				cout << "Chua nhap du lieu! \n";
 			break;
@@ -683,10 +693,11 @@ void demSoPhongTroDonGiaMax(PhongTro list[], int front, int rear)
 	}
 
 	cout << "Co " << d << " phong tro co don gia phong cao nhat \n";
-	outputList(room, dau, cuoi);
+	if (d != 0)
+		outputList(room, dau, cuoi);
 }
 
-void demSoPhongTroByNamSinh(PhongTro list[], int front, int rear)
+void demSoPhongTroByNamSinh(PhongTro list[], int front, int rear, int namSinh)
 {
 	int d = 0;
 	PhongTro room[MAX];
@@ -694,15 +705,16 @@ void demSoPhongTroByNamSinh(PhongTro list[], int front, int rear)
 
 	for (int i = front; i <= rear; i++)
 	{
-		if (list[i].DOB.year < 2002)
+		if (list[i].DOB.year < namSinh)
 		{
 			push(room, dau, cuoi, list[i], m);
 			d++;
 		}
 	}
 
-	cout << "Co " << d << " phong tro \n";
-	outputList(room, dau, cuoi);
+	cout << "Co " << d << " phong tro co nguoi thue tro co nam sinh < " << namSinh << endl;
+	if (d != 0)
+		outputList(room, dau, cuoi);
 }
 
 double TongChiSoDien(PhongTro list[], int front, int rear)
@@ -737,6 +749,7 @@ void xuatKQ(int b[MAX], int n)
 
 	cout << endl;
 }
+
 // Nhập ma trận kề
 void nhap(int b[][MAX], int n, int front, int rear)
 {
